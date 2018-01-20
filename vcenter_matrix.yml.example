@@ -1,0 +1,7 @@
+vcenter_matrix:
+- { vcenter: "vcnorth", hostname: "prod1", uuid: "42208510-d3d6-348a-9cb2-8f8ef832a731" }
+- { vcenter: "vcnorth", hostname: "prod2", uuid: "42101708-7564-645a-5c75-cb54d81a28fd" }
+- { vcenter: "vcnorth", hostname: "prod3", uuid: "4210f2ab-7154-1bd3-be43-89cb59237bc2" }
+- { vcenter: "vcsouth", hostname: "test1", uuid: "4210bbd5-393c-2128-6a37-db96a68b66a3" }
+- { vcenter: "vcsouth", hostname: "test2", uuid: "42102e87-b2e4-7cf2-a984-6af10815ff8d" }
+- { vcenter: "vcsouth", hostname: "test3", uuid: "4210f983-77a0-21a4-f977-97e0beebcc20" }

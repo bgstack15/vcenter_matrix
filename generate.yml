@@ -1,0 +1,57 @@
+---
+# File: /etc/ansible/shell/vcenter_matrix/vcenter_matrix.yml
+# Location: /etc/ansible/shell/vcenter_matrix/
+# Author: bgstack15
+# Startdate: 2017-12-14
+# Title: Playbook
+# Purpose: Generate a csv of vcenter,VM,uuid
+# History:
+#    2017-12-15 Added exclusion for Windows
+# Usage: used by generate.sh
+# Reference:
+# Improve:
+# Document:
+
+- hosts: all
+  vars_files:
+  - /etc/ansible/shell/vcenter_matrix/username.yml
+  tasks:
+
+  - debug:
+      msg: "Now checking vcenter {{ vc_hostname }}."
+
+  - vmware_vm_facts:
+      username: "{{ vc_username }}"
+      hostname: "{{ vc_hostname }}"
+      password: "{{ vc_password }}"
+      validate_certs: no
+    delegate_to: localhost
+    register: vmfacts
+
+  - debug:
+      msg: "{{ vmfacts }}"
+
+#  - pause:
+#      prompt: "Please check the facts above."
+
+  - name: generate yml file
+    lineinfile:
+      dest: "{{ outputfile_yml }}"
+      line: '- { vcenter: "{{ vc_hostname }}", hostname: "{{ item.key }}", uuid: "{{ item.value.uuid }}" }'
+      insertafter: EOF
+      create: yes
+    delegate_to: localhost
+    with_dict: "{{ vmfacts.virtual_machines }}"
+    when:
+    - '"Windows" not in item.value.guest_fullname'
+
+  - name: generate csv file
+    lineinfile:
+      dest: "{{ outputfile_csv }}"
+      line: "{{ vc_hostname }},{{ item.key }},{{ item.value.uuid }}"
+      insertafter: EOF
+      create: yes
+    delegate_to: localhost
+    with_dict: "{{ vmfacts.virtual_machines }}"
+    when:
+    - '"Windows" not in item.value.guest_fullname'
